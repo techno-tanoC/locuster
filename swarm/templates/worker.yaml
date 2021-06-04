@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: locust-worker
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: locust-worker
+  template:
+    metadata:
+      labels:
+        app: locust-worker
+    spec:
+      containers:
+      - name: locust-worker
+        image: locustio/locust:latest
+        command: ["locust", "-f", "/mnt/locust/locustfile.py", "--worker", "--master-host", "locust-master"]
+        ports:
+        - containerPort: 8089
+        volumeMounts:
+        - name: locustfile
+          mountPath: "/mnt/locust/"
+          readOnly: true
+      volumes:
+      - name: locustfile
+        configMap:
+          name: locustfile

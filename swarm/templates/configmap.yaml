@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: locustfile
+data:
+  locustfile.py: |-
+    {{- .Files.Get "locustfile.py" | nindent 4 -}}
